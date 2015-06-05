@@ -1,0 +1,26 @@
+D/andrid-sp-demo( 1608): LINE 1 TRIGGER:
+D/andrid-sp-demo( 1608):         Memory constructor 0x558f06b050 
+D/andrid-sp-demo( 1608): LINE 2 TRIGGER:
+D/andrid-sp-demo( 1608):         onFirstRef on 0x558f06b050
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 1
+D/andrid-sp-demo( 1608): LINE 3 TRIGGER:
+D/andrid-sp-demo( 1608):         Memory constructor 0x558f06b0c0 
+D/andrid-sp-demo( 1608):         onFirstRef on 0x558f06b0c0
+D/andrid-sp-demo( 1608): LINE 4 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 2
+D/andrid-sp-demo( 1608): LINE 5 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 3
+D/andrid-sp-demo( 1608): LINE 6 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 2
+D/andrid-sp-demo( 1608): LINE 7 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 1
+D/andrid-sp-demo( 1608):         Count of 0x558f06b0c0 : 2
+D/andrid-sp-demo( 1608): LINE 8 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 1
+D/andrid-sp-demo( 1608): LINE 9 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 2
+D/andrid-sp-demo( 1608): LINE 10 TRIGGER:
+D/andrid-sp-demo( 1608):         Count of 0x558f06b050 : 1
+D/andrid-sp-demo( 1608):         Memory destructor 0x558f06b0c0
+D/andrid-sp-demo( 1608):         Memory destructor 0x558f06b050
+D/andrid-sp-demo( 1608): LINE -1 TRIGGER:
