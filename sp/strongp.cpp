@@ -17,8 +17,8 @@ using namespace android;
 // class Memory subclass RefBase[1] so it can be reference counted
 // and be accepted by template class sp<T> [2], where the sp stands for
 // strong pointer
-// [1]https://android.googlesource.com/platform/frameworks/native/+/jb-mr1-dev/include/utils/StrongPointer.h
-// [2]https://android.googlesource.com/platform/frameworks/native/+/jb-mr1-dev/include/utils/RefBase.h
+// [1]https://android.googlesource.com/platform/frameworks/native/+/jb-mr1-dev/include/utils/RefBase.h
+// [2]https://android.googlesource.com/platform/frameworks/native/+/jb-mr1-dev/include/utils/StrongPointer.h
 
 class Memory: public RefBase {
 public:
@@ -42,9 +42,11 @@ private:
     void *mData;
 };
 
-
+// used as a MARK in the output so that you can associate the output with the line of code
 #define L(N)   ALOGD("LINE %d TRIGGER:",N);
+// print out the strong counter number of the object
 #define C(obj) ALOGD("        Count of %p : %d", (void*)obj, obj->getStrongCount());
+
 int main()
 {
     {
@@ -104,8 +106,8 @@ int main()
         sp<Memory> &spm5 = spm1;
         C(m1);
 
-        // we can also create a smart pointer points to nothing at first
-        // and later assign it a value, and we can remove the reference explictly
+        // we can also create a smart pointer pointing to nothing at first
+        // and later assign it a value. We can also remove the reference explictly
         // by calling sp::clear()
         L(9)
         sp<Memory> spm6;
