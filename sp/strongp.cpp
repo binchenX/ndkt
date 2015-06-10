@@ -15,8 +15,8 @@
 using namespace android;
 
 // class Memory subclass RefBase[1] so it can be reference counted
-// and be accepted by template class sp<T> [2], where the sp stands for
-// strong pointer
+// and be accepted by template class sp<T> [2], where the sp stands
+// for strong pointer
 // [1]https://android.googlesource.com/platform/frameworks/native/+/jb-mr1-dev/include/utils/RefBase.h
 // [2]https://android.googlesource.com/platform/frameworks/native/+/jb-mr1-dev/include/utils/StrongPointer.h
 
@@ -42,9 +42,9 @@ private:
     void *mData;
 };
 
-// used as a MARK in the output so that you can associate the output with the line of code
+// used as a MARK in the output
 #define L(N)   ALOGD("LINE %d TRIGGER:",N);
-// print out the strong counter number of the object
+// print out the strong counter numbers of the object
 #define C(obj) ALOGD("        Count of %p : %d", (void*)obj, obj->getStrongCount());
 
 int main()
@@ -60,18 +60,21 @@ int main()
         sp<Memory> spm1 = m1;
         C(m1);
 
-        // usually, we will combine previous two steps into one single statement.
+        // usually, previous two steps are combined into one single statement.
         // create another strong pointer, spm2, and initialize it.
         // To get the raw object, use sp<T>::get()
         L(3)
         sp<Memory> spm2 = new Memory(128);
         Memory *m2 = spm2.get();
-        // to access the method, use sp as if you are working with raw pointer
+        // To access the member methods, use sp as if you are working with raw
+        // pointer. sp has implemented the operators -> and *
         int size = spm2->size();
+        size = (*spm2).size();
 
-        // create a third strong pointer, spm3, using construcotr sp(const sp<T>& other),
-        // which will increase the reference counter pointed by spm1 by 1.
-        // now, m1 is pointed by two strong pointers, spm1 and spm3
+        // create a third strong pointer, spm3, using its copy constructor
+        // sp(const sp<T>& other), which will increase the reference counter
+        // of the object spm1 pointed to by 1.
+        // Now, m1 is pointed by two strong pointers, spm1 and spm3
         L(4)
         sp<Memory> spm3 = spm1;
         C(m1);
@@ -89,7 +92,7 @@ int main()
         L(6)
         C(m1);
 
-        // trigger sp& operator = (const sp<T>& other);
+        // trigger the assigment operator sp& operator=(const sp<T>& other);
         L(7)
         // before the assigment, spm2 pointed to m2 and spm3 pointed to m1
         spm3 = spm2;
@@ -107,8 +110,8 @@ int main()
         C(m1);
 
         // we can also create a smart pointer pointing to nothing at first
-        // and later assign it a value. We can also remove the reference explictly
-        // by calling sp::clear()
+        // using the default constructor, and later assign it a value.
+        // We can also remove the reference explictly by calling sp::clear()
         L(9)
         sp<Memory> spm6;
         assert(spm6.get() == NULL);

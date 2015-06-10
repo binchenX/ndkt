@@ -11,4 +11,19 @@ LOCAL_C_INCLUDES += frameworks/base/include system/core/include
                 
 LOCAL_MODULE:= spdemo 
 
+#####################################
+
+include $(CLEAR_VARS)
+
+LOCAL_SRC_FILES:= weakp.cpp
+
+LOCAL_SHARED_LIBRARIES := \
+   libutils \
+   libcutils
+        
+LOCAL_C_INCLUDES += frameworks/base/include system/core/include
+                
+LOCAL_MODULE:= wpdemo 
+
+
 include $(BUILD_EXECUTABLE)
