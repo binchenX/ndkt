@@ -15,10 +15,14 @@
 using namespace android;
 
 // class Memory subclass RefBase so it can be reference counted
-// and be accepted by both sp<T> and wp<T>, where the wp stands
-// for weak pointer. A weak pointer won't prevent the object it points
-// to from being deleted, and a dedicated api will be used to test if
-// the underlying object still available before actually using it.
+// and be accepted by both sp<T> and wp<T>, where sp stands for
+// strong pointer and wp stands for weak pointer. 
+// A weak pointer won't prevent the object it points to from being 
+// deleted - as long as there is no strong pointer pointing to the 
+// raw object it will be deleted. Hence, to make sure the raw object
+// is still valid, you will first need to promote it to be strong 
+// pointer first. If the promote success, use it; otherwise, you know
+// underlying object is no longer valid and you won't want to use it.  
 
 class Memory: public RefBase {
 public:
@@ -45,46 +49,45 @@ private:
 // used as a MARK in the output
 #define L(N)   ALOGD("LINE %d TRIGGER:",N);
 // print out the strong counter numbers of the object
-#define C(obj) ALOGD("        Count of %p : %d", (void*)obj.get(), obj->getStrongCount());
+#define C(obj) ALOGD("        Count of %p : %d", (void*)obj, obj->getStrongCount());
 
 int main()
 {
     wp<Memory> wpm1;
-    {
-        // create an Memory instance and let it managed by a sp
+    Memory *m = new Memory(1);
+    {//scope for spm1
+        // create a Memory instance and let it be managed by a sp
         L(1)
-        sp<Memory> spm1 = new Memory(1);
+        sp<Memory> spm1(m); 
         // assign the sp to the weak pointer, wpm1
         wpm1 = spm1;
 
-        // you can't access wp's underlying raw pointer, since
-        // there is no accessor apis defined for wp
-        // (recall that for sp, there are three accessor api/operators
-        // you can use: get(),*,->).
-        // To access the raw pointer the wp pointing to, you need first
-        // promote it to an sp, and use the returning sp if it is not NULL
-        sp<Memory> spm2 = wpm1.promote();
-        if (spm2 != NULL) {
-            L(2)
-            ALOGD("        Promotion to sp successfully");
-            spm2->size();
-            // should be two, since both spm1 and spm2 pointed to it
-            C(spm2)
+        { // scope for spm2
+            // You can't access wp's underlying raw pointer directly, since
+            // there is no accessor apis defined for it.
+            // Recall that for sp, there are three accessor apis/operators
+            // you can use: get(),*,->
+            // To access the raw pointer the wp pointing to, you need first
+            // promote it to an sp, and use the returning sp if it is not NULL.
+            sp<Memory> spm2 = wpm1.promote();
+            if (spm2 != NULL) {
+                L(2)
+                ALOGD("        Promotion to sp successfully");
+                spm2->size();
+                // ref count is 2, since both spm1 and spm2 pointed to it
+                C(m)
+            }
         }
+        // at this point, spm2 is out of scope, ref count of the m becomes 1 
     }
-
-    // The promotion will fail, when the object managed by the wp
-    // has already being desctructed since there is no strong reference to it.
-    // Note that the weak reference to the object won't prevent the object
-    // being pointed to from being desctructed, that is the exact reason why
-    // it is called week reference.
+    // Beyond previouse close curly, spm1 was also out of scope.
+    // Since there was no strong pointer to m, m was destroyed.
+    // Hence, following promotion will fail and we should not try to
+    // use it any more.
     L(3)
-    // Note that at the point, the two strong pointer are both out of scope.
-    // So the object they pointing to (which is the same as wpm1 points to)
-    // are already desctructed, so the promote will fail.
     sp<Memory> spm3 = wpm1.promote();
     if (spm3 == NULL) {
-        ALOGD("        Promotion Fail. Objecte already being destructed");
+        ALOGD("        Promotion Fail. Object had already been destructed");
     }
 
     L(-1)
