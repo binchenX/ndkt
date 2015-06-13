@@ -15,7 +15,7 @@
 using namespace android;
 
 // class Memory subclass RefBase so it can be reference counted
-// and be accepted by template class wp<T>, where the wp stands
+// and be accepted by both sp<T> and wp<T>, where the wp stands
 // for weak pointer. A weak pointer won't prevent the object it points
 // to from being deleted, and a dedicated api will be used to test if
 // the underlying object still available before actually using it.
